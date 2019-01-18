@@ -1,0 +1,4 @@
+creds.py
+favs.db*
+*.iml
+.idea/
