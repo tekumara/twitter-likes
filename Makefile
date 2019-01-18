@@ -1,6 +1,6 @@
 MAKEFLAGS += --warn-undefined-variables
 .DEFAULT_GOAL := help
-.PHONY: run
+.PHONY: help venv fetch list-db
 .DEFAULT_GOAL := help
 
 SHELL = /bin/bash -o pipefail
