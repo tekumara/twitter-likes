@@ -68,7 +68,7 @@ def get_unseen_statuses(api, min_id, max_id):
 
 def main():
     api = get_api()
-    with dbm.open('favs', 'c') as db:
+    with dbm.open('favs.db', 'c') as db:
         try:
             max_id = int(max(db.keys()))
             # contrary to docs, twitter finds less than OR EQUAL TO

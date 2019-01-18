@@ -19,4 +19,4 @@ fetch:
 
 ## list database
 list-db:
-	echo list | gdbmtool favs
+	echo list | gdbmtool favs.db
