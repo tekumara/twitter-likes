@@ -68,7 +68,8 @@ def get_unseen_statuses(api, min_id, max_id):
 
 def main():
     api = get_api()
-    with dbm.open('favs.db', 'c') as db:
+    count = 0
+    with dbm.open('favs.db', 'c') as db, open('favs.ndjson', 'at') as jsonfile:
         try:
             max_id = int(max(db.keys()))
             # contrary to docs, twitter finds less than OR EQUAL TO
@@ -80,8 +81,15 @@ def main():
         print("Looking for favs newer than %s, and also those older than %s" %
                 (max_id, min_id))
         for status in get_unseen_statuses(api, min_id, max_id):
-            print(status.id)
-            db[str(status.id)] = json.dumps(status._json)
+            count = count + 1
+            print(count)
+            status_json = json.dumps(status._json)
+            db[str(status.id)] = status_json
+            jsonfile.write(status_json)
+
+            # flush every line, so we can see them if we are tailing the file at the same time
+            jsonfile.flush()
+
             # twitter rate-limits us to 15 requests / 15 minutes, so
             # space this out a bit to avoid a super-long sleep at the
             # end which could lose the connection.

@@ -16,6 +16,7 @@ venv:
 ## fetch twitter likes from last known id
 fetch:
 	pipenv run python get_favs.py
+	echo count | gdbmtool favs.db
 
 ## list database
 dump:
