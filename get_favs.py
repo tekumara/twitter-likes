@@ -61,12 +61,12 @@ def get_api():
 def get_unseen_statuses(api, min_id, max_id):
     if min_id and max_id:
         yield from tweepy.Cursor(api.favorites, creds.username,
-                                 count=200, since_id=max_id, include_entities=True).items()
+                                 count=200, since_id=max_id, include_entities=True, tweet_mode='extended').items()
         yield from tweepy.Cursor(api.favorites, creds.username,
-                                 count=200, max_id=min_id, include_entities=True).items()
+                                 count=200, max_id=min_id, include_entities=True, tweet_mode='extended').items()
     else:
         yield from tweepy.Cursor(api.favorites, creds.username,
-                                 count=200, include_entities=True).items()
+                                 count=200, include_entities=True, tweet_mode='extended').items()
 
 
 def main():
