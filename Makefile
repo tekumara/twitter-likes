@@ -11,12 +11,12 @@ help:
 
 ## setup virtualenv
 venv:
-	pipenv install
+	pipenv sync
 
 ## fetch twitter likes from last known id
 fetch:
 	pipenv run python get_favs.py
 
 ## list database
-list-db:
+dump:
 	echo list | gdbmtool favs.db
