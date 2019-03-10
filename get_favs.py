@@ -49,52 +49,57 @@ import dbm
 import json
 import time
 
-import creds # you must create creds.py
+import creds  # you must create creds.py
+
 
 def get_api():
     auth = tweepy.OAuthHandler(creds.consumer_key, creds.consumer_secret)
     auth.set_access_token(creds.access_token, creds.access_token_secret)
     return tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
+
 def get_unseen_statuses(api, min_id, max_id):
     if min_id and max_id:
         yield from tweepy.Cursor(api.favorites, creds.username,
-                count=200, since_id=max_id, include_entities=True).items()
+                                 count=200, since_id=max_id, include_entities=True).items()
         yield from tweepy.Cursor(api.favorites, creds.username,
-                count=200, max_id=min_id, include_entities=True).items()
+                                 count=200, max_id=min_id, include_entities=True).items()
     else:
         yield from tweepy.Cursor(api.favorites, creds.username,
-                count=200, include_entities=True).items()
+                                 count=200, include_entities=True).items()
+
 
 def main():
     api = get_api()
     count = 0
-    with dbm.open('favs.db', 'c') as db, open('favs.ndjson', 'at') as jsonfile:
+    with dbm.open('favs.db', 'c') as db, open('favs.ndjson', 'at', buffering=1) as jsonfile:
         try:
             max_id = int(max(db.keys()))
             # contrary to docs, twitter finds less than OR EQUAL TO
             # max_id :(
-            min_id = int(min(db.keys()))-1
+            min_id = int(min(db.keys())) - 1
         except ValueError:
             min_id = None
             max_id = None
         print("Looking for favs newer than %s, and also those older than %s" %
-                (max_id, min_id))
+              (max_id, min_id))
         for status in get_unseen_statuses(api, min_id, max_id):
             count = count + 1
             print(count)
+            status_id = str(status.id)
             status_json = json.dumps(status._json)
-            db[str(status.id)] = status_json
-            jsonfile.write(status_json)
-
-            # flush every line, so we can see them if we are tailing the file at the same time
-            jsonfile.flush()
+            if status_id not in db:
+                db[status_id] = status_json
+                jsonfile.write(status_json + "\n")
+            else:
+                print(status_id + " exists in db")
 
             # twitter rate-limits us to 15 requests / 15 minutes, so
             # space this out a bit to avoid a super-long sleep at the
             # end which could lose the connection.
-            time.sleep(60*15/(15*200))
+            time.sleep(60 * 15 / (15 * 200))
         print('Done.')
+
 
 if __name__ == '__main__':
     main()
