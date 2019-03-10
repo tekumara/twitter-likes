@@ -25,5 +25,9 @@ fetch:
 	echo count | gdbmtool favs.db
 
 ## list database
-dump:
+dump-db:
 	echo list | gdbmtool favs.db
+
+## list handle and tweet text
+text:
+	cat favs.ndjson | jq -r '[.user.screen_name, .full_text] | @tsv'
