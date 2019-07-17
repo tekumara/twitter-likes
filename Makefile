@@ -31,3 +31,7 @@ dump-db:
 ## list handle and tweet text
 text:
 	cat favs.ndjson | jq -r '[.user.screen_name, .full_text] | @tsv'
+
+## search favs.ndjson, eg: make find text=moat
+find:
+	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {full_text,created_at,link}'	
