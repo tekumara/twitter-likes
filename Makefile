@@ -7,20 +7,27 @@ SHELL = /bin/bash -o pipefail
 
 venv = ~/.virtualenvs/twitter-likes
 python := $(venv)/bin/python
+pip := $(venv)/bin/pip
 
 ## display this help message
 help:
 	@awk '/^##.*$$/,/^[~\/\.a-zA-Z_-]+:/' $(MAKEFILE_LIST) | awk '!(NR%2){print $$0p}{p=$$0}' | awk 'BEGIN {FS = ":.*?##"}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
 
-$(venv): requirements.txt
+$(pip):
+	# create new virtualenv $(venv) containing pip
 	$(if $(value VIRTUAL_ENV),$(error Cannot create a virtualenv when running in a virtualenv. Please deactivate the current virtual env $(VIRTUAL_ENV)),)
-	python3 -m venv --clear $(venv) && $(venv)/bin/pip install -r requirements.txt
+	python3 -m venv --clear $(venv)
+
+$(venv): requirements.txt $(pip)
+	$(pip) install -r requirements.txt
+	touch $(venv)
+
 
 ## set up python virtual env and install requirements
 venv: $(venv)
 
 ## fetch twitter likes from last known id
-fetch:
+fetch: $(venv)
 	$(python) get_favs.py
 	echo count | gdbmtool favs.db
 
