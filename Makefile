@@ -32,6 +32,10 @@ dump-db:
 text:
 	cat favs.ndjson | jq -r '[.user.screen_name, .full_text] | @tsv'
 
+## list newest tweets first
+text-newest:
+	cat favs.ndjson | jq -s -c -r 'sort_by(.created_at | strptime("%a %b %d %H:%M:%S %z %Y") | mktime) | reverse | .[] | [.created_at, .user.screen_name, .full_text] | @tsv'
+
 ## search favs.ndjson, eg: make find text=moat
 find:
 	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {full_text,created_at,link}'	
