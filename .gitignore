@@ -1,4 +1,6 @@
 creds.py
 favs.db*
+favs.ndjson
 *.iml
 .idea/
+__pycache__/

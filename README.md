@@ -5,7 +5,19 @@ Download your twitter likes using an enhanced version of https://gist.github.com
 ## prereqs
 
 * Install python 3
-* Update creds.py and run `make venv` to create the virtual env
+* Install gdbm: `brew install gdbm`
+* Create an application at [apps.twitter.com](https://apps.twitter.com)
+* Create `creds.py` with the following from your application
+
+```
+username = "datagrok"
+consumer_key = "..."
+consumer_secret = "..."
+access_token = "..."
+access_token_secret = "..."
+```
+
+* `make venv` to create the virtual env
 
 ## commands
 
