@@ -24,3 +24,7 @@ access_token_secret = "..."
 `make fetch` downloads favs to favs.db and favs.ndjson  
 `make dump` extract favs from favs.db to stdout  
 `make` to show all options
+
+## alternatives
+
+[IFTTT](https://ifttt.com/applets/113241p-save-the-tweets-you-like-on-twitter-to-a-google-spreadsheet) - however it won't log tweets older than the previous liked tweet (eg: a tweet from 2018 if the last liked tweet was in 2019). I'm assuming it's using the `since_id` filter of the last recorded tweet when calling the [favourites api](https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-favorites-list).
