@@ -26,7 +26,7 @@ $(venv): requirements.txt $(pip)
 ## set up python virtual env and install requirements
 venv: $(venv)
 
-## fetch twitter likes from last known id
+## fetch twitter likes
 fetch: $(venv)
 	$(python) get_favs.py
 	echo count | gdbmtool favs.db
@@ -45,4 +45,4 @@ text-newest:
 
 ## search favs.ndjson, eg: make find text=moat
 find:
-	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {full_text,created_at,link}'	
+	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {screen_name:.user.screen_name,full_text,created_at,link}'	
