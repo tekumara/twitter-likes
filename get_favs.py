@@ -19,7 +19,8 @@ than your most recently fav'd status, we won't notice it!
 warning: the twitter api docs caution that "there are limits to the
 number of tweets which can be accessed through the API." sooo if you're
 a longtime twitter user, maybe some of your favs might be completely
-irrecoverable? i dunno.  🔥 this is fine.🔥
+irrecoverable? i dunno.  🔥 the max number of likes I've been able to
+retrieve at a time is 3170. 🔥
 
 to use, create an "application" at apps.twitter.com. put the credentials
 it gives you into a creds.py file:
