@@ -59,11 +59,9 @@ def get_api():
 
 def main():
     api = get_api()
-    count = 0
     with dbm.open('favs.db', 'c') as db, open('favs.ndjson', 'at', buffering=1) as jsonfile:
-        for status in tweepy.Cursor(api.favorites, creds.username,
-                                    count=200, include_entities=True, tweet_mode='extended').items():
-            count = count + 1
+        for count, status in enumerate(tweepy.Cursor(api.favorites, creds.username,
+                                    count=200, include_entities=True, tweet_mode='extended').items(), start=1):
             print(count)
             status_id = str(status.id)
             status_json = json.dumps(status._json)
