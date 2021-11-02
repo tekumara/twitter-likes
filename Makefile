@@ -5,7 +5,7 @@ MAKEFLAGS += --warn-undefined-variables
 
 SHELL = /bin/bash -o pipefail
 
-venv = ~/.virtualenvs/twitter-likes
+venv = .venv
 python := $(venv)/bin/python
 pip := $(venv)/bin/pip
 
@@ -45,4 +45,4 @@ text-newest:
 
 ## search favs.ndjson, eg: make find text=moat
 find:
-	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {screen_name:.user.screen_name,full_text,created_at,link}'	
+	grep -i $(text) favs.ndjson | jq -C '{link: ("https://twitter.com/"+.user.screen_name+"/status/"+.id_str)} + . | {screen_name:.user.screen_name,full_text,created_at,link}'
