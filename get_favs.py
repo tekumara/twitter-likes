@@ -54,14 +54,14 @@ import creds  # you must create creds.py
 def get_api():
     auth = tweepy.OAuthHandler(creds.consumer_key, creds.consumer_secret)
     auth.set_access_token(creds.access_token, creds.access_token_secret)
-    return tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    return tweepy.API(auth, wait_on_rate_limit=True)
 
 
 def main():
     api = get_api()
     count = 0
     with dbm.open('favs.db', 'c') as db, open('favs.ndjson', 'at', buffering=1) as jsonfile:
-        for status in tweepy.Cursor(api.favorites, creds.username,
+        for status in tweepy.Cursor(api.get_favorites, screen_name=creds.username,
                                     count=200, include_entities=True, tweet_mode='extended').items():
             count = count + 1
             print(count)
