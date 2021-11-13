@@ -6,7 +6,7 @@ Download your twitter likes using an enhanced version of https://gist.github.com
 
 - Install python 3
 - Install gdbm: `brew install gdbm`
-- Create an application at [apps.twitter.com](https://apps.twitter.com)
+- Create an application at [developer.twitter.com/en/apps](https://developer.twitter.com/en/apps)
 - Create `creds.py` with the following from your application
 
 ```
