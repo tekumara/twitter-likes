@@ -50,7 +50,6 @@ import time
 import os
 import urllib.request
 import argparse
-from time import sleep
 
 import creds  # you must create creds.py
 
@@ -62,7 +61,7 @@ def get_api():
 
 
 def main(args):
-    
+
     download_media=args.m #if True, download all media on each tweet
     media_folders=args.f #if True, store media in username folders
 
@@ -88,7 +87,7 @@ def main(args):
                     print(user_screenname)
                     #media download
                     media_files=[]
-                    try:    
+                    try:
                         media = status.extended_entities.get('media', [])
                         if len(media) > 0:
                             if 'video_info' in media[0]:
@@ -104,9 +103,10 @@ def main(args):
                             else:
                                 for m in media:
                                     media_files.append(m['media_url'])
+                        media_files.append(m['media_url'])
                     except:
                         print("No extended entities, skipping.....")
-                    
+
                     for media_file in media_files:
                         print("MEDIA",media_file)
                         filename=media_file.split("/")[-1]
@@ -118,9 +118,9 @@ def main(args):
                                     filename=user_screenname+"/"+filename
                                     if not os.path.exists("downloaded/"+user_screenname):
                                         os.makedirs("downloaded/"+user_screenname)
-                      
+
                         urllib.request.urlretrieve(media_file, "downloaded/"+filename)
-                    
+
                 db[status_id] = status_json
                 jsonfile.write(status_json + "\n")
                 print("total media files:",len(media_files))
