@@ -103,7 +103,7 @@ def main(args):
                             else:
                                 for m in media:
                                     media_files.append(m['media_url'])
-                        media_files.append(m['media_url'])
+                       
                     except:
                         print("No extended entities, skipping.....")
 
