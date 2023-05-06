@@ -61,8 +61,9 @@ def get_api():
 
 
 def main(args):
-    
+
     download_media=args.m #if True, download all media on each tweet
+    media_folders=args.f #if True, store media in username folders
 
     api = get_api()
 
@@ -78,8 +79,12 @@ def main(args):
             print(count)
             status_id = str(status.id)
             status_json = json.dumps(status._json)
+            user_screenname=status.user.screen_name
+
             if status_id not in db:
                 if download_media:
+                    print("Downloading media for:")
+                    print(user_screenname)
                     #media download
                     media_files=[]
                     try:
@@ -87,29 +92,39 @@ def main(args):
                         if len(media) > 0:
                             if 'video_info' in media[0]:
                                 videourl=""
-                                for v in media[0]['video_info']['variants']:
+                                bestbitrate=0
+                                for i,v in enumerate(media[0]['video_info']['variants']):
                                     if v['content_type']=="video/mp4":
-                                        videourl=v['url']
+                                        if v["bitrate"]>bestbitrate:
+                                            bestbitrate=v["bitrate"]
+                                            videourl=v['url']
                                 if len(videourl)>0:
-                                    #grabbing last video in list that is mp4 (best bitrate)
                                     media_files.append(videourl)
                             else:
                                 for m in media:
                                     media_files.append(m['media_url'])
-                        media_files.append(m['media_url'])
+                       
                     except:
                         print("No extended entities, skipping.....")
-                    
+
                     for media_file in media_files:
                         print("MEDIA",media_file)
                         filename=media_file.split("/")[-1]
                         if "?" in filename:
                             filename=filename.split("?")[0]
+                        if media_folders:
+                            if user_screenname:
+                                if len(user_screenname)>0:
+                                    filename=user_screenname+"/"+filename
+                                    if not os.path.exists("downloaded/"+user_screenname):
+                                        os.makedirs("downloaded/"+user_screenname)
+
                         urllib.request.urlretrieve(media_file, "downloaded/"+filename)
-                    
 
                 db[status_id] = status_json
                 jsonfile.write(status_json + "\n")
+                print("total media files:",len(media_files))
+                print("")
             else:
                 print(status_id + " exists in db")
 
@@ -123,5 +138,6 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get favourites from Twitter')
     parser.add_argument('-m',  action='store_true',help='download all media in each post (photos and video)')
+    parser.add_argument('-f',  action='store_true',help='download media in userid folders')
     args = parser.parse_args()
     main(args)
